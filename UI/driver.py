@@ -7,15 +7,19 @@ class Application(Frame):
 
     def start_calibration(self):
         self.calibrate.config(text="Quit Calibrating", command=self.end_calibration)
+        self.calibrating = True
 
     def end_calibration(self):
         self.calibrate.config(text="Calibrate", command=self.start_calibration)
+        self.calibrating = False
 
     def start_run(self):
         self.run.config(text="Quit Running", command=self.end_run)
+        self.running = True
 
     def end_run(self):
         self.run.config(text="Run", command=self.start_run)
+        self.running = False
 
     def create_widgets(self):
         button_height = 2
