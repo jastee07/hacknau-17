@@ -13,6 +13,7 @@ window.config(background="#FFFFFF")
 imageFrame = tk.Frame(window, width=600, height=500)
 imageFrame.grid(row=0, column=0, padx=10, pady=2)
 
+
 #Capture video frames
 lmain = tk.Label(imageFrame)
 lmain.grid(row=0, column=0)
