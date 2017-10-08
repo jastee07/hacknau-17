@@ -1,48 +1,39 @@
-import matplotlib
-matplotlib.use('TkAgg')
+import numpy as np
+import cv2
+import Tkinter as tk
+from PIL.Image import core as _imaging
+from PIL import ImageTk, Image
 
-from numpy import arange, sin, pi
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.figure import Figure
+#Set up GUI
+window = tk.Tk()  #Makes main window
+window.wm_title("Digital Microscope")
+window.config(background="#FFFFFF")
 
-import sys
-if sys.version_info[0] < 3:
-    import Tkinter as Tk
-else:
-    import tkinter as Tk
+#Graphics window
+imageFrame = tk.Frame(window, width=600, height=500)
+imageFrame.grid(row=0, column=0, padx=10, pady=2)
 
-class GUI:
-
-    def destroy(e):
-        sys.exit()
-
-    root = Tk.Tk()
-    root.wm_title("Heartbeat Monitor")
-
-
-    f = Figure(figsize=(5, 4), dpi=100)
-    a = f.add_subplot(111)
-    t = arange(0.0, 3.0, 0.01)
-    s = sin(2*pi*t)
-
-    a.plot(t, s)
-    a.set_title('Heartbeat Monitor')
-    a.set_xlabel('Time')
-    a.set_ylabel('Beats per Minute')
+#Capture video frames
+lmain = tk.Label(imageFrame)
+lmain.grid(row=0, column=0)
+cap = cv2.VideoCapture(0)
 
 
-    # a tk.DrawingArea
-    canvas = FigureCanvasTkAgg(f, master=root)
-    canvas.show()
-    canvas.get_tk_widget().pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
+def show_frame():
+    _, frame = cap.read()
+    frame = cv2.flip(frame, 1)
+    cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
+    img = Image.fromarray(cv2image)
+    imgtk = ImageTk.PhotoImage(image=img)
+    lmain.imgtk = imgtk
+    lmain.configure(image=imgtk)
+    lmain.after(10, show_frame)
 
-    canvas._tkcanvas.pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
 
-    calibrate_button = Tk.Button(master=root, text='Calibrate', command=sys.exit)
-    calibrate_button.pack(side=Tk.BOTTOM)
+#Slider window (slider controls stage position)
+sliderFrame = tk.Frame(window, width=600, height=100)
+sliderFrame.grid(row = 600, column=0, padx=10, pady=2)
 
-    Tk.mainloop()
 
-root = Tk()
-gui = GUI(master=root)
-root.mainloop()
+show_frame()
+window.mainloop()  #Starts GUI
