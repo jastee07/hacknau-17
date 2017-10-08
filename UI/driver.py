@@ -1,48 +1,48 @@
-from Tkinter import *
+import matplotlib
+matplotlib.use('TkAgg')
+
+from numpy import arange, sin, pi
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
+
+import sys
+if sys.version_info[0] < 3:
+    import Tkinter as Tk
+else:
+    import tkinter as Tk
+
+class GUI:
+
+    def destroy(e):
+        sys.exit()
+
+    root = Tk.Tk()
+    root.wm_title("Heartbeat Monitor")
 
 
-class Application(Frame):
-    calibrating = False
-    running = False
+    f = Figure(figsize=(5, 4), dpi=100)
+    a = f.add_subplot(111)
+    t = arange(0.0, 3.0, 0.01)
+    s = sin(2*pi*t)
 
-    def start_calibration(self):
-        self.calibrate.config(text="Quit Calibrating", command=self.end_calibration)
-        self.calibrating = True
+    a.plot(t, s)
+    a.set_title('Heartbeat Monitor')
+    a.set_xlabel('Time')
+    a.set_ylabel('Beats per Minute')
 
-    def end_calibration(self):
-        self.calibrate.config(text="Calibrate", command=self.start_calibration)
-        self.calibrating = False
 
-    def start_run(self):
-        self.run.config(text="Quit Running", command=self.end_run)
-        self.running = True
+    # a tk.DrawingArea
+    canvas = FigureCanvasTkAgg(f, master=root)
+    canvas.show()
+    canvas.get_tk_widget().pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
 
-    def end_run(self):
-        self.run.config(text="Run", command=self.start_run)
-        self.running = False
+    canvas._tkcanvas.pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
 
-    def create_widgets(self):
-        button_height = 2
-        button_width = 14
-        self.calibrate = Button(self)
-        self.calibrate["text"] = "Calibrate"
-        self.calibrate["command"] = self.start_calibration
-        self.calibrate.pack({"side": "left"})
-        self.calibrate.config(height=button_height, width=button_width)
+    calibrate_button = Tk.Button(master=root, text='Calibrate', command=sys.exit)
+    calibrate_button.pack(side=Tk.BOTTOM)
 
-        self.run = Button(self)
-        self.run["text"] = "Run"
-        self.run["command"] = self.start_run
-        self.run.pack({"side": "right"})
-        self.run.config(height=button_height, width=button_width)
-
-    def __init__(self, master=None):
-        Frame.__init__(self, master)
-        self.pack()
-        self.create_widgets()
+    Tk.mainloop()
 
 root = Tk()
-app = Application(master=root)
-app.mainloop()
-
-
+gui = GUI(master=root)
+root.mainloop()
