@@ -1,10 +1,10 @@
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import matplotlib
+#matplotlib.style.use('fivethirtyeight')
 
-#style.use('fivethirtyeight')
 
-
-fig = plt.figure(1)
+fig = plt.figure(num=1, figsize=(16,12))
 vis_axl = fig.add_subplot(3,1,1)
 
 spe_axl = fig.add_subplot(3,1,2)
@@ -60,5 +60,6 @@ def animate(i):
 	vis_axl.set_title("Visual Indicator")
 	spe_axl.set_title("Auditory Indicator")
 	ard_axl.set_title("Temperature Indicator")
+
 ani = animation.FuncAnimation(fig, animate, interval=200)
 plt.show()
